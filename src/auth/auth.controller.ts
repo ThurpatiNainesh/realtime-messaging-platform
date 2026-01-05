@@ -36,10 +36,10 @@ export class AuthController {
   async addChannelMembers(
     @Param('channelId') channelId: string,
     @Body() dto: AddChannelMembersDto,
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: any,
   ) {
     return this.channelsService.addMembers(
-      userId,
+      user.userId, // Accessing userId from the user object
       channelId,
       dto.userIds,
     );
