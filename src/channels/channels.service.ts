@@ -57,4 +57,44 @@ export class ChannelsService {
       throw new ForbiddenException('User not in channel');
     }
   }
+  async isMember(userId: string, channelId: string): Promise<boolean> {
+    const member = await this.memberRepo.findOne({
+      where: { userId, channelId },
+    });
+    return !!member;
+  }
+
+  async addMembers(
+    actorUserId: string,
+    channelId: string,
+    userIds: string[],
+  ) {
+    // 🔐 Only existing member can add others
+    const isActorMember = await this.isMember(actorUserId, channelId);
+    if (!isActorMember) {
+      throw new ForbiddenException('You are not a member of this channel');
+    }
+
+    // Remove duplicates in input
+    const uniqueUserIds = [...new Set(userIds)];
+
+    const membersToInsert: ChannelMember[] = [];
+
+    for (const userId of uniqueUserIds) {
+      const exists = await this.isMember(userId, channelId);
+      if (!exists) {
+        membersToInsert.push(
+          this.memberRepo.create({ userId, channelId }),
+        );
+      }
+    }
+
+    if (membersToInsert.length === 0) {
+      return { added: 0 };
+    }
+
+    await this.memberRepo.save(membersToInsert);
+
+    return { added: membersToInsert.length };
+  }
 }

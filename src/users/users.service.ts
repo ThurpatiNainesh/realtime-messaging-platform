@@ -10,11 +10,19 @@ export class UsersService {
     private usersRepo: Repository<User>,
   ) {}
 
-  findByEmail(email: string) {
-    return this.usersRepo.findOne({ where: { email } });
+  async findByEmail(email: string) {
+    return this.usersRepo.createQueryBuilder('user')
+      .addSelect('user.passwordHash')
+      .where('user.email = :email', { email })
+      .getOne();
   }
 
   findById(id: string) {
     return this.usersRepo.findOne({ where: { id } });
   }
+  createUser(data: { email: string; passwordHash: string }) {
+  const user = this.usersRepo.create(data);
+  return this.usersRepo.save(user);
+}
+
 }

@@ -18,6 +18,7 @@ export class ChannelsController {
 
   @Post()
   async createChannel(@Body() dto: CreateChannelDto, @Req() req) {
+    
     return this.channelsService.createChannel(dto, req.user.userId);
   }
 
