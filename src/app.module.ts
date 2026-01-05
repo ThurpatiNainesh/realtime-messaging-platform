@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /* Modules */
@@ -21,23 +22,31 @@ import { ReadReceipt } from './entities/read-receipt.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1997', 
-      database: 'realtime_messaging',
-      entities: [
-        User,
-        Workspace,
-        WorkspaceMember,
-        Channel,
-        ChannelMember,
-        Message,
-        ReadReceipt,
-      ],
-      synchronize: true, // ❗ disable in production
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST', 'localhost'),
+        port: configService.get<number>('DB_PORT', 5432),
+        username: configService.get('DB_USERNAME', 'postgres'),
+        password: configService.get('DB_PASSWORD', ''),
+        database: configService.get('DB_NAME', 'realtime_messaging'),
+        entities: [
+          User,
+          Workspace,
+          WorkspaceMember,
+          Channel,
+          ChannelMember,
+          Message,
+          ReadReceipt,
+        ],
+        synchronize: configService.get('NODE_ENV') !== 'production', // Disable in production
+      }),
     }),
 
     AuthModule,

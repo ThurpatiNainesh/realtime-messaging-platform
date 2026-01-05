@@ -1,98 +1,217 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Slack-Style Messaging Backend (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a **Slack-style real-time messaging backend** built using **NestJS**, **Socket.IO**, **PostgreSQL**, and **Redis**.
 
-## Description
+It supports:
+- Multi-tenant workspaces (organizations)
+- Channels within workspaces
+- Real-time messaging using WebSockets
+- Message persistence and pagination
+- Secure JWT-based authentication
+- Horizontal scalability using Redis Pub/Sub
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The goal of this project is to demonstrate **real-time system design, clean API boundaries, authorization, and scalability thinking**, rather than UI or frontend concerns.
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## Tech Stack & Versions
 
-## Compile and run the project
+### Backend
+- **Node.js**: v18+
+- **NestJS**: v10+
+- **TypeScript**: v5+
 
-```bash
-# development
-$ npm run start
+### Real-Time
+- **Socket.IO**: v4.x
+- **@nestjs/websockets**
+- **@nestjs/platform-socket.io**
 
-# watch mode
-$ npm run start:dev
+### Database
+- **PostgreSQL**: v14+
+- **TypeORM**: v0.3+
 
-# production mode
-$ npm run start:prod
-```
+### Caching / Messaging
+- **Redis**: v7.x
+- Redis Pub/Sub for cross-instance event propagation
 
-## Run tests
+### Auth & Utilities
+- **JWT** (JSON Web Tokens)
+- **bcrypt**
+- **class-validator**
+- **class-transformer**
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## Setup Instructions (Local)
 
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 1. Clone the Repository
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+git clone <repo-url>
+cd slack-style-backend
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2. Install Dependencies
 
-## Resources
+```bash
+npm install
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3. Start PostgreSQL
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Make sure PostgreSQL is running locally.
 
-## Support
+Create a database:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```sql
+CREATE DATABASE slack_clone;
+```
 
-## Stay in touch
+### 4. Start Redis
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Using Docker (recommended):
 
-## License
+```bash
+docker run -d -p 6379:6379 redis
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Or start Redis locally if already installed.
+
+### 5. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+# Server
+PORT=3000
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_secure_password
+DB_NAME=realtime_messaging
+NODE_ENV=development
+
+# Auth
+JWT_SECRET=super_secret_key
+JWT_EXPIRES_IN=1d
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+```
+
+### 6. Run the Application
+
+```bash
+npm run start:dev
+```
+
+Server will be available at: `http://localhost:3000`
+
+---
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| PORT | Application port |
+| DB_HOST | PostgreSQL host |
+| DB_PORT | PostgreSQL port |
+| DB_USER | Database username |
+| DB_PASSWORD | Database password |
+| DB_NAME | Database name |
+| JWT_SECRET | JWT signing secret |
+| JWT_EXPIRES_IN | Token expiry |
+| REDIS_HOST | Redis host |
+| REDIS_PORT | Redis port |
+
+---
+
+## Architecture Decisions (Brief)
+
+### 1. REST + WebSocket Separation
+
+**REST APIs** are used for:
+- Authentication
+- Workspace & channel management
+- Fetching message history
+
+**WebSockets (Socket.IO)** are used only for:
+- Real-time message delivery
+
+This keeps the system clean, testable, and scalable.
+
+### 2. Redis Pub/Sub for Scalability
+
+- Socket.IO alone works only on a single server
+- Redis Pub/Sub ensures:
+  - Messages are broadcast across multiple backend instances
+  - Horizontal scaling without sticky sessions
+
+### 3. Database as Source of Truth
+
+- All messages are persisted in PostgreSQL
+- Redis is used only for event propagation, not storage
+- Ensures durability and message ordering
+
+### 4. Explicit Membership Authorization
+
+- Socket room membership ≠ channel membership
+- Channel membership is enforced at the database level
+- Prevents unauthorized message sending
+
+---
+
+## Assumptions & Limitations
+
+### Assumptions
+- Users already exist or are created via a basic auth flow
+- Single organization per workspace
+- No frontend included (API-first design)
+
+### Limitations
+- No message editing or deletion
+- No file uploads
+- No push notifications
+- No offline sync
+- No message search indexing
+- Read receipts are modeled but not fully wired to sockets
+
+---
+
+## What I Would Improve With More Time
+
+### 1. Advanced Real-Time Features
+- Read receipts (socket-driven)
+- Typing indicators
+- Online/offline presence
+- Message acknowledgements (ACKs)
+
+### 2. Performance & Reliability
+- Cursor-based pagination everywhere
+- Rate limiting for socket events
+- Idempotent message handling
+- Better Redis failure handling
+
+### 3. Security Enhancements
+- Role-based permissions (admin/moderator)
+- Channel-level ACLs
+- Invite-only private channels
+
+### 4. DevOps & Observability
+- Docker Compose for full stack
+- Health checks
+- Structured logging
+- Metrics & tracing
+
+---
+
+## Final Notes
+
+This project focuses on **backend architecture and real-time system design**, similar to how Slack-like systems are built in production.
+
+Frontend and deployment are intentionally kept out of scope to highlight backend responsibilities clearly.
